@@ -22,7 +22,8 @@ const StackRoutes = () => {
             backgroundColor: theme.COLORS.BACKGROUND,
           },
           headerTintColor: theme.COLORS.TEXT_PRIMARY,
-          headerRight: props => (
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerRight: () => (
             <Button
               onPress={() => navigation.navigate('SingIn')}
               title="Sing In"
@@ -30,7 +31,17 @@ const StackRoutes = () => {
           ),
         }}
       />
-      <Stack.Screen name="SingIn" component={SignIn} />
+      <Stack.Screen
+        name="SingIn"
+        component={SignIn}
+        options={{
+          title: 'Sing in',
+          headerStyle: {
+            backgroundColor: theme.COLORS.BACKGROUND,
+          },
+          headerTintColor: theme.COLORS.TEXT_PRIMARY,
+        }}
+      />
     </Stack.Navigator>
   );
 };

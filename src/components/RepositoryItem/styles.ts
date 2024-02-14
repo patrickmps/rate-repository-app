@@ -34,8 +34,8 @@ export const Avatar = styled.Image`
 
 export const FullName = styled.Text`
   font-size: 22px;
-  font-weight: 600;
   color: ${({theme}) => theme.COLORS.TEXT_PRIMARY};
+  font-family: ${({theme}) => theme.FONTS.REGULAR};
 `;
 export const Description = styled.Text`
   flex: 1;

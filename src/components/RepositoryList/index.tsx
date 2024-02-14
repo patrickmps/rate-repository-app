@@ -1,6 +1,6 @@
 import {FlatList} from 'react-native';
 import RepositoryItem from '../RepositoryItem';
-import {RepositoryTypes} from '../../types';
+import {RepositoryTypes} from '../../@types/repository';
 import {Separator} from './styles';
 
 const repositories: RepositoryTypes[] = [

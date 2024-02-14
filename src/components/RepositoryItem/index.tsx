@@ -1,5 +1,5 @@
 import React from 'react';
-import {RepositoryTypes} from '../../types';
+import {RepositoryTypes} from '../../@types/repository';
 import {
   Avatar,
   Column,
@@ -10,7 +10,7 @@ import {
   Language,
   Number,
   Row,
-} from './style';
+} from './styles';
 import numbro from 'numbro';
 
 type RepositoryProps = {repository: RepositoryTypes};

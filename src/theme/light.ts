@@ -1,3 +1,5 @@
+import {Platform} from 'react-native';
+
 export default {
   COLORS: {
     BACKGROUND: '#ffffff',
@@ -13,5 +15,14 @@ export default {
     TEXT_PRIMARY: '#24292f',
     TEXT_SECONDARY: '#57606a',
     SECONDARY: '#0969da',
+    BUTTON: '#2ea043',
+    ERROR: '#d73a4a',
+  },
+  FONTS: {
+    REGULAR: Platform.select({
+      android: 'Roboto-Regular',
+      ios: 'Arial',
+      default: 'sans-serif',
+    }),
   },
 };
