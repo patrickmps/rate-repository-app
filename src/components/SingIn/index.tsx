@@ -2,6 +2,8 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import FormikTextInput from '../TextInput';
 import {ButtonTitle, Container, SubmitButton} from './styles';
+import useSignIn from '../../hooks/useSignIn';
+import {useNavigation} from '@react-navigation/native';
 
 interface InitialValuesTypes {
   username: string;
@@ -16,14 +18,24 @@ const validationSchema = yup.object().shape({
   password: yup.string().required('Password is required.'),
 });
 
-const SignIn = () => {
-  const initialValues: InitialValuesTypes = {
-    username: '',
-    password: '',
-  };
+const initialValues: InitialValuesTypes = {
+  username: '',
+  password: '',
+};
 
-  const onSubmit = (values: InitialValuesTypes) => {
-    console.log(values);
+const SignIn = () => {
+  const [signIn] = useSignIn();
+  const navigation = useNavigation();
+
+  const onSubmit = async (values: InitialValuesTypes) => {
+    const {username, password} = values;
+
+    try {
+      const {data} = await signIn({username, password});
+      navigation.navigate('Repositories');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
