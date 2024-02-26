@@ -23,6 +23,33 @@ const initialValues: InitialValuesTypes = {
   password: '',
 };
 
+type SignInProps = {
+  onSubmit: (values: InitialValuesTypes) => Promise<void>;
+};
+
+export const SignInContainer = ({onSubmit}: SignInProps) => {
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}>
+      {({handleSubmit}) => (
+        <Container>
+          <FormikTextInput name="username" placeholder="Username" />
+          <FormikTextInput
+            name="password"
+            placeholder="Password"
+            secureTextEntry
+          />
+          <SubmitButton onPress={() => handleSubmit()}>
+            <ButtonTitle>Sign in</ButtonTitle>
+          </SubmitButton>
+        </Container>
+      )}
+    </Formik>
+  );
+};
+
 const SignIn = () => {
   const [signIn] = useSignIn();
   const navigation = useNavigation();
@@ -38,26 +65,7 @@ const SignIn = () => {
     }
   };
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}>
-      {({handleSubmit}) => (
-        <Container>
-          <FormikTextInput name="username" placeholder="Username" />
-          <FormikTextInput
-            name="password"
-            placeholder="Password"
-            secureTextEntry
-          />
-          <SubmitButton onPress={() => handleSubmit()}>
-            <ButtonTitle>Sing in</ButtonTitle>
-          </SubmitButton>
-        </Container>
-      )}
-    </Formik>
-  );
+  return <SignInContainer onSubmit={onSubmit} />;
 };
 
 export default SignIn;

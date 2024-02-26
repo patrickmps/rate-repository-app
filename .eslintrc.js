@@ -10,6 +10,7 @@ module.exports = {
   parser: '@babel/eslint-parser',
   env: {
     'react-native/react-native': true,
+    jest: true,
   },
   rules: {
     'react/prop-types': 'off',

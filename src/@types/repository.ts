@@ -9,3 +9,11 @@ export interface RepositoryTypes {
   reviewCount: number;
   ownerAvatarUrl: string;
 }
+
+export interface RepositoriesType {
+  totalCount: number;
+  edges: {
+    node: RepositoryTypes;
+    cursor: string;
+  }[];
+}

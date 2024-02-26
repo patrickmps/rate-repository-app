@@ -1,13 +1,5 @@
 import {useState, useEffect} from 'react';
-import {RepositoryTypes} from '../@types/repository';
-
-interface RepositoriesType {
-  totalCount: number;
-  edges: {
-    node: RepositoryTypes;
-    cursor: string;
-  }[];
-}
+import {RepositoriesType} from '../@types/repository';
 
 const useRepositories = () => {
   const [repositories, setRepositories] = useState<RepositoriesType>();

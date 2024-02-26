@@ -17,7 +17,7 @@ type RepositoryProps = {repository: RepositoryTypes};
 
 const RepositoryItem = ({repository}: RepositoryProps) => {
   return (
-    <Container>
+    <Container testID="repositoryItem">
       <Row>
         <Column>
           <Avatar source={{uri: repository.ownerAvatarUrl}} />
