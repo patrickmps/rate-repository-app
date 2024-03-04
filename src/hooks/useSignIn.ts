@@ -12,7 +12,7 @@ const useSignIn = () => {
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
 
-  const signIn = async ({username, password}: AuthType) => {
+  async function signIn({username, password}: AuthType) {
     const {data} = await mutate({
       variables: {credentials: {username, password}},
     });
@@ -20,9 +20,9 @@ const useSignIn = () => {
     await authStorage.setAccessToken(data.authenticate.accessToken);
     apolloClient.resetStore();
     return result;
-  };
+  }
 
-  return [signIn, result];
+  return [signIn, result] as const;
 };
 
 export default useSignIn;

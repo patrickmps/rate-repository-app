@@ -8,6 +8,23 @@ export interface RepositoryTypes {
   ratingAverage: number;
   reviewCount: number;
   ownerAvatarUrl: string;
+  url: string;
+  reviews: {
+    edges: ReviewRepositoryTypes[];
+  };
+}
+
+export interface ReviewRepositoryTypes {
+  node: {
+    id: string;
+    text: string;
+    rating: number;
+    createdAt: string;
+    user: {
+      id: string;
+      username: string;
+    };
+  };
 }
 
 export interface RepositoriesType {

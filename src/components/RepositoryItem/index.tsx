@@ -2,6 +2,8 @@ import React from 'react';
 import {RepositoryTypes} from '../../@types/repository';
 import {
   Avatar,
+  Button,
+  ButtonTitle,
   Column,
   Container,
   Description,
@@ -12,10 +14,11 @@ import {
   Row,
 } from './styles';
 import numbro from 'numbro';
+import {Linking} from 'react-native';
 
-type RepositoryProps = {repository: RepositoryTypes};
+type RepositoryProps = {repository: RepositoryTypes; showButton?: boolean};
 
-const RepositoryItem = ({repository}: RepositoryProps) => {
+const RepositoryItem = ({repository, showButton = false}: RepositoryProps) => {
   return (
     <Container testID="repositoryItem">
       <Row>
@@ -70,6 +73,14 @@ const RepositoryItem = ({repository}: RepositoryProps) => {
           <Label>Rating</Label>
         </Column>
       </Row>
+      {showButton && (
+        <Button
+          onPress={async () => {
+            await Linking.openURL(repository.url);
+          }}>
+          <ButtonTitle>Open in GitHub</ButtonTitle>
+        </Button>
+      )}
     </Container>
   );
 };

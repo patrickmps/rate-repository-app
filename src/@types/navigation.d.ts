@@ -1,7 +1,5 @@
-type RootStackParamList = {
-  SingIn: undefined;
-  Repositories: undefined;
-};
+import RootStackParamList from '../routes/@types/stack';
+
 export declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}

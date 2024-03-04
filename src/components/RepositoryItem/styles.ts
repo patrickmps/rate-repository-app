@@ -22,6 +22,7 @@ export const Column = styled.View<RepositoryStyleProps>`
   margin-right: 20px;
   align-items: ${props => props.alignItems};
   gap: ${props => props.gap ?? 0}px;
+  flex-shrink: 1;
 `;
 
 export const Avatar = styled.Image`
@@ -59,4 +60,21 @@ export const Number = styled.Text`
 export const Label = styled.Text`
   font-size: 14px;
   color: ${({theme}) => theme.COLORS.TEXT_SECONDARY};
+`;
+
+export const Button = styled.Pressable`
+  background-color: ${({theme}) => theme.COLORS.SECONDARY};
+  margin: 15px 10px;
+  height: 45px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-family: sans-serif;
+`;
+
+export const ButtonTitle = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  font-family: ${({theme}) => theme.FONTS.REGULAR};
 `;

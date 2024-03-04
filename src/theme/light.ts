@@ -21,7 +21,17 @@ export default {
   FONTS: {
     REGULAR: Platform.select({
       android: 'Roboto-Regular',
-      ios: 'Arial',
+      ios: 'Montserrat-Regular',
+      default: 'sans-serif',
+    }),
+    BOLD: Platform.select({
+      android: 'Roboto-Bold',
+      ios: 'Montserrat-Bold',
+      default: 'sans-serif',
+    }),
+    MEDIUM: Platform.select({
+      android: 'Roboto-Medium',
+      ios: 'Montserrat-Medium',
       default: 'sans-serif',
     }),
   },
