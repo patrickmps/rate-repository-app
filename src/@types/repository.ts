@@ -24,6 +24,7 @@ export interface ReviewRepositoryTypes {
       id: string;
       username: string;
     };
+    repository: RepositoryTypes;
   };
 }
 

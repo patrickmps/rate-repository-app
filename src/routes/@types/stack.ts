@@ -6,6 +6,7 @@ type RootStackParamList = {
     id: string;
   };
   CreateReview: undefined;
+  MyReviews: undefined;
 };
 
 export default RootStackParamList;

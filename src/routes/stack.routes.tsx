@@ -11,6 +11,7 @@ import SingleRepository from '../components/SingleRepository';
 import RootStackParamList from './@types/stack';
 import CreateReview from '../components/CreateReview';
 import SignUp from '../components/SignUp';
+import MyReviews from '../components/MyReviews';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -35,10 +36,14 @@ const StackRoutes = () => {
   function createReview() {
     navigation.navigate('CreateReview');
   }
+  function myReviews() {
+    navigation.navigate('MyReviews');
+  }
 
   const headerRightButton = () => {
     return user?.me ? (
       <>
+        <Button onPress={myReviews} title="My Reviews" />
         <Button onPress={createReview} title="Create Review" />
         <Button onPress={signOut} title="Sign Out" />
       </>
@@ -106,6 +111,17 @@ const StackRoutes = () => {
         component={CreateReview}
         options={{
           title: 'Create review',
+          headerStyle: {
+            backgroundColor: theme.COLORS.BACKGROUND,
+          },
+          headerTintColor: theme.COLORS.TEXT_PRIMARY,
+        }}
+      />
+      <Stack.Screen
+        name="MyReviews"
+        component={MyReviews}
+        options={{
+          title: 'My Reviews',
           headerStyle: {
             backgroundColor: theme.COLORS.BACKGROUND,
           },

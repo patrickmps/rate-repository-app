@@ -5,37 +5,10 @@ import RepositoryItem from '../RepositoryItem';
 import {GET_REPOSITORY} from '../../graphql/queries';
 import {useQuery} from '@apollo/client';
 import {ReviewRepositoryTypes} from '../../@types/repository';
-import {formatDistanceToNow} from 'date-fns';
-import {
-  Circle,
-  Column,
-  Container,
-  DateText,
-  RatingText,
-  Row,
-  Separator,
-  Text,
-  UserNameText,
-} from './styles';
 
-const ReviewItem = ({review}: {review: ReviewRepositoryTypes}) => {
-  return (
-    <Container>
-      <Row>
-        <Column>
-          <Circle>
-            <RatingText>{review.node.rating}</RatingText>
-          </Circle>
-        </Column>
-        <Column>
-          <UserNameText>{review.node.user.username}</UserNameText>
-          <DateText>{formatDistanceToNow(review.node.createdAt)}</DateText>
-          <Text>{review.node.text}</Text>
-        </Column>
-      </Row>
-    </Container>
-  );
-};
+import {Separator, Text} from './styles';
+import ReviewItem from '../ReviewItem';
+import {ReviewItemProps} from '../ReviewItem/@types/reviewItem';
 
 const SingleRepository = () => {
   const {params}: RouteProp<{params: {id: string}}> = useRoute();
@@ -44,9 +17,17 @@ const SingleRepository = () => {
     fetchPolicy: 'network-only',
   });
 
-  const reviews: ReviewRepositoryTypes[] = data?.repository?.reviews
+  const reviews: ReviewItemProps[] = data?.repository?.reviews
     ? data?.repository?.reviews?.edges?.map(
-        (edge: {node: ReviewRepositoryTypes}) => edge,
+        (edge: ReviewRepositoryTypes): ReviewItemProps => {
+          return {
+            id: edge.node.id,
+            createdAt: edge.node.createdAt,
+            rating: edge.node.rating,
+            textReview: edge.node.text,
+            title: edge.node.user.username,
+          };
+        },
       )
     : [];
 
@@ -54,7 +35,7 @@ const SingleRepository = () => {
     return <Text>{error.message}</Text>;
   }
 
-  const renderReview = ({item}: {item: ReviewRepositoryTypes}) => (
+  const renderReview = ({item}: {item: ReviewItemProps}) => (
     <ReviewItem review={item} />
   );
 
@@ -64,7 +45,7 @@ const SingleRepository = () => {
     <FlatList
       data={reviews}
       renderItem={renderReview}
-      keyExtractor={item => item.node.id}
+      keyExtractor={item => item.id}
       ListHeaderComponent={() => (
         <RepositoryItem repository={data?.repository} showButton />
       )}

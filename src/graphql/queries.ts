@@ -79,6 +79,10 @@ export const ME = gql`
       reviews @include(if: $includeReviews) {
         edges {
           node {
+            rating
+            createdAt
+            text
+            id
             repository {
               id
               ownerName
@@ -97,9 +101,6 @@ export const ME = gql`
               language
               userHasReviewed
             }
-            rating
-            createdAt
-            text
           }
         }
       }

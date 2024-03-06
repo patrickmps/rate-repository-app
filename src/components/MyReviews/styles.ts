@@ -5,9 +5,3 @@ export const Separator = styled.View`
   height: 10px;
   background-color: ${({theme}) => theme.COLORS.BACKGROUND};
 `;
-
-export const Text = styled.Text`
-  color: ${({theme}) => theme.COLORS.TEXT_PRIMARY};
-  font-size: 18px;
-  font-family: ${({theme}) => theme.FONTS.REGULAR};
-`;
