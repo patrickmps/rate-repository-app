@@ -2,16 +2,28 @@ import {gql} from '@apollo/client';
 
 export const GET_REPOSITORIES = gql`
   query Repositories(
-    $orderBy: AllRepositoriesOrderBy
+    $after: String
+    $first: Int
     $orderDirection: OrderDirection
+    $orderBy: AllRepositoriesOrderBy
     $searchKeyword: String
+    $ownerName: String
   ) {
     repositories(
-      orderBy: $orderBy
+      after: $after
+      first: $first
       orderDirection: $orderDirection
+      orderBy: $orderBy
       searchKeyword: $searchKeyword
+      ownerName: $ownerName
     ) {
       totalCount
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
       edges {
         cursor
         node {
@@ -35,14 +47,14 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const GET_REPOSITORY = gql`
-  query Repository($repositoryId: ID!) {
+  query Repository($repositoryId: ID!, $first: Int, $after: String) {
     repository(id: $repositoryId) {
       id
       ownerName
       name
       createdAt
       fullName
-      reviews {
+      reviews(first: $first, after: $after) {
         edges {
           node {
             id
@@ -54,6 +66,11 @@ export const GET_REPOSITORY = gql`
               username
             }
           }
+        }
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
         }
       }
       ratingAverage

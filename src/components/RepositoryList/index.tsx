@@ -7,17 +7,20 @@ import {RepositoriesType} from '../../@types/repository';
 import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import {useState} from 'react';
+import useRepositories from '../../hooks/useReposiories';
 
 type RepositoriesProps = {
   repositories: RepositoriesType;
   error?: undefined | ApolloError;
   loading?: boolean;
+  onEndReach?: (info: {distanceFromEnd: number}) => void;
 };
 
 export const RepositoryListContainer = ({
   repositories,
   error,
   loading,
+  onEndReach,
 }: RepositoriesProps) => {
   const navigation = useNavigation();
   const repositoryNodes = repositories
@@ -43,6 +46,8 @@ export const RepositoryListContainer = ({
         </Pressable>
       )}
       keyExtractor={item => item.id}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };
@@ -72,10 +77,16 @@ const RepositoryList = () => {
         break;
     }
   };
-  const {data, error, loading} = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: 'cache-and-network',
-    variables: {...filter(), searchKeyword: search},
+
+  const {repositories, error, loading, fetchMore} = useRepositories({
+    ...filter(),
+    searchKeyword: search,
+    first: 6,
   });
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   return (
     <>
@@ -96,9 +107,10 @@ const RepositoryList = () => {
         />
       </Picker>
       <RepositoryListContainer
-        repositories={data?.repositories}
+        repositories={repositories}
         error={error}
         loading={loading}
+        onEndReach={onEndReach}
       />
     </>
   );

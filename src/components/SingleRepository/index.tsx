@@ -12,12 +12,29 @@ import {ReviewItemProps} from '../ReviewItem/@types/reviewItem';
 
 const SingleRepository = () => {
   const {params}: RouteProp<{params: {id: string}}> = useRoute();
-  const {data, error, loading} = useQuery(GET_REPOSITORY, {
-    variables: {repositoryId: params.id},
-    fetchPolicy: 'network-only',
+  const {data, error, loading, fetchMore} = useQuery(GET_REPOSITORY, {
+    variables: {repositoryId: params.id, first: 4},
+    fetchPolicy: 'cache-and-network',
   });
 
-  const reviews: ReviewItemProps[] = data?.repository?.reviews
+  const handleFetchMoreReviews = (): void => {
+    const canFetchMore =
+      !loading && data?.repository.reviews.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        repositoryId: params.id,
+        after: data?.repository.reviews.pageInfo.endCursor,
+        first: 1,
+      },
+    });
+  };
+
+  const reviews: ReviewItemProps[] = data?.repository.reviews
     ? data?.repository?.reviews?.edges?.map(
         (edge: ReviewRepositoryTypes): ReviewItemProps => {
           return {
@@ -50,6 +67,8 @@ const SingleRepository = () => {
         <RepositoryItem repository={data?.repository} showButton />
       )}
       ItemSeparatorComponent={Separator}
+      onEndReached={handleFetchMoreReviews}
+      onEndReachedThreshold={0.5}
     />
   );
 };
