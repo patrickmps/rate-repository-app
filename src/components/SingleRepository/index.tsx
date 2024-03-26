@@ -1,4 +1,3 @@
-import {FlatList} from 'react-native';
 import React from 'react';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import RepositoryItem from '../RepositoryItem';
@@ -6,9 +5,10 @@ import {GET_REPOSITORY} from '../../graphql/queries';
 import {useQuery} from '@apollo/client';
 import {ReviewRepositoryTypes} from '../../@types/repository';
 
-import {Separator, Text} from './styles';
+import {ReviewList, Separator, Text} from './styles';
 import ReviewItem from '../ReviewItem';
 import {ReviewItemProps} from '../ReviewItem/@types/reviewItem';
+import Spinner from '../Spinner';
 
 const SingleRepository = () => {
   const {params}: RouteProp<{params: {id: string}}> = useRoute();
@@ -57,9 +57,9 @@ const SingleRepository = () => {
   );
 
   return loading ? (
-    <Text>caregando...</Text>
+    <Spinner />
   ) : (
-    <FlatList
+    <ReviewList
       data={reviews}
       renderItem={renderReview}
       keyExtractor={item => item.id}

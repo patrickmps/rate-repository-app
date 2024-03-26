@@ -1,7 +1,5 @@
 import {formatDistanceToNow} from 'date-fns';
 import {
-  Button,
-  ButtonDelete,
   ButtonTitle,
   Circle,
   Column,
@@ -17,6 +15,8 @@ import {Alert} from 'react-native';
 import {Linking} from 'react-native';
 import {DELETE_REVIEW} from '../../graphql/mutations';
 import {useMutation} from '@apollo/client';
+import Button from '../Button';
+import {useTheme} from 'styled-components/native';
 
 const ReviewItem = ({
   review,
@@ -26,6 +26,7 @@ const ReviewItem = ({
   showButtons?: boolean;
 }) => {
   const [mutate, result] = useMutation(DELETE_REVIEW, {refetchQueries: 'all'});
+  const theme = useTheme();
 
   function deleReview() {
     try {
@@ -68,17 +69,20 @@ const ReviewItem = ({
       </Row>
       {showButtons && (
         <Row justifyContent="center" gap={10}>
-          <Button>
-            <ButtonTitle
-              onPress={async () => {
-                await Linking.openURL(review.url!);
-              }}>
-              View repository
-            </ButtonTitle>
-          </Button>
-          <ButtonDelete onPress={deleteAlert}>
-            <ButtonTitle>Delete review</ButtonTitle>
-          </ButtonDelete>
+          <Button
+            title="View repository"
+            onPress={async () => {
+              await Linking.openURL(review.url!);
+            }}
+            flex={1}
+            backgroundColor={theme.COLORS.SECONDARY}
+          />
+          <Button
+            title="Delete review"
+            onPress={deleteAlert}
+            flex={1}
+            backgroundColor={theme.COLORS.ERROR}
+          />
         </Row>
       )}
     </Container>

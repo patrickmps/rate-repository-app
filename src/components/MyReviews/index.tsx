@@ -5,6 +5,7 @@ import ReviewItem from '../ReviewItem';
 import {Separator} from './styles';
 import {ReviewItemProps} from '../ReviewItem/@types/reviewItem';
 import {ReviewRepositoryTypes} from '../../@types/repository';
+import Spinner from '../Spinner';
 
 const MyReviews = () => {
   const {data, error, loading} = useQuery(ME, {
@@ -36,7 +37,7 @@ const MyReviews = () => {
   );
 
   return loading ? (
-    <Text>caregando...</Text>
+    <Spinner />
   ) : (
     <FlatList
       data={reviews}

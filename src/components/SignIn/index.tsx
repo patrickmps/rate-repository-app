@@ -1,9 +1,11 @@
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FormikTextInput from '../TextInput';
-import {ButtonTitle, Container, SubmitButton} from './styles';
+import {Container} from './styles';
 import useSignIn from '../../hooks/useSignIn';
 import {useNavigation} from '@react-navigation/native';
+import Button from '../Button';
+import Toast from 'react-native-toast-message';
 
 interface InitialValuesTypes {
   username: string;
@@ -25,9 +27,10 @@ const initialValues: InitialValuesTypes = {
 
 type SignInProps = {
   onSubmit: (values: InitialValuesTypes) => Promise<void>;
+  loading?: boolean;
 };
 
-export const SignInContainer = ({onSubmit}: SignInProps) => {
+export const SignInContainer = ({onSubmit, loading}: SignInProps) => {
   return (
     <Formik
       initialValues={initialValues}
@@ -41,9 +44,11 @@ export const SignInContainer = ({onSubmit}: SignInProps) => {
             placeholder="Password"
             secureTextEntry
           />
-          <SubmitButton onPress={() => handleSubmit()}>
-            <ButtonTitle>Sign in</ButtonTitle>
-          </SubmitButton>
+          <Button
+            title="Sign in"
+            onPress={() => handleSubmit()}
+            loading={loading}
+          />
         </Container>
       )}
     </Formik>
@@ -51,21 +56,31 @@ export const SignInContainer = ({onSubmit}: SignInProps) => {
 };
 
 const SignIn = () => {
-  const [signIn] = useSignIn();
+  const [signIn, result] = useSignIn();
   const navigation = useNavigation();
 
   const onSubmit = async (values: InitialValuesTypes) => {
     const {username, password} = values;
 
     try {
-      const {data} = await signIn({username, password});
+      await signIn({username, password});
       navigation.navigate('Repositories');
+      Toast.show({
+        type: 'success',
+        text1: 'Login successful',
+        text2: `Welcome, ${username}!`,
+      });
     } catch (e) {
+      Toast.show({
+        type: 'error',
+        text1: 'Incorrect credentials',
+        text2: 'Enter the correct credentials and try again',
+      });
       console.log(e);
     }
   };
 
-  return <SignInContainer onSubmit={onSubmit} />;
+  return <SignInContainer onSubmit={onSubmit} loading={result.loading} />;
 };
 
 export default SignIn;

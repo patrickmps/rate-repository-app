@@ -1,10 +1,12 @@
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FormikTextInput from '../TextInput';
-import {ButtonTitle, Container, SubmitButton} from './styles';
+import {Container} from './styles';
 import {useNavigation} from '@react-navigation/native';
-import {useMutation} from '@apollo/client';
+import {ApolloError, useMutation} from '@apollo/client';
 import {CREATE_USER} from '../../graphql/mutations';
+import Button from '../Button';
+import Toast from 'react-native-toast-message';
 
 interface InitialValuesTypes {
   username: string;
@@ -37,9 +39,10 @@ const initialValues: InitialValuesTypes = {
 
 type SignUpProps = {
   onSubmit: (values: InitialValuesTypes) => Promise<void>;
+  loading: boolean;
 };
 
-export const SignUpContainer = ({onSubmit}: SignUpProps) => {
+export const SignUpContainer = ({onSubmit, loading}: SignUpProps) => {
   return (
     <Formik
       initialValues={initialValues}
@@ -58,9 +61,11 @@ export const SignUpContainer = ({onSubmit}: SignUpProps) => {
             placeholder="Password Confirm"
             secureTextEntry
           />
-          <SubmitButton onPress={() => handleSubmit()}>
-            <ButtonTitle>Sign up</ButtonTitle>
-          </SubmitButton>
+          <Button
+            onPress={() => handleSubmit()}
+            title="Sign up"
+            loading={loading}
+          />
         </Container>
       )}
     </Formik>
@@ -75,16 +80,26 @@ const SignUp = () => {
     const {username, password} = values;
 
     try {
-      mutate({variables: {user: {username, password}}});
-      console.log(result);
-
+      await mutate({variables: {user: {username, password}}});
+      Toast.show({
+        type: 'success',
+        text1: 'Account created successfully!',
+        text2: `Log in to continue`,
+      });
       navigation.navigate('SignIn');
     } catch (e) {
+      if (e instanceof ApolloError) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error!',
+          text2: `${e.message}`,
+        });
+      }
       console.log(e);
     }
   };
 
-  return <SignUpContainer onSubmit={onSubmit} />;
+  return <SignUpContainer onSubmit={onSubmit} loading={result.loading} />;
 };
 
 export default SignUp;

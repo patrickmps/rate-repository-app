@@ -1,13 +1,14 @@
-import {FlatList, Pressable, Text, TextInput} from 'react-native';
+import {FlatList, Pressable, Text} from 'react-native';
 import RepositoryItem from '../RepositoryItem';
-import {SearchInput, Separator} from './styles';
-import {ApolloError, useQuery} from '@apollo/client';
-import {GET_REPOSITORIES} from '../../graphql/queries';
+import {Box, Separator} from './styles';
+import {ApolloError} from '@apollo/client';
 import {RepositoriesType} from '../../@types/repository';
 import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import {useState} from 'react';
 import useRepositories from '../../hooks/useReposiories';
+import SearchInput from '../SearchInput';
+import Spinner from '../Spinner';
 
 type RepositoriesProps = {
   repositories: RepositoriesType;
@@ -32,7 +33,7 @@ export const RepositoryListContainer = ({
   }
 
   return loading ? (
-    <Text>carregando...</Text>
+    <Spinner />
   ) : (
     <FlatList
       data={repositoryNodes}
@@ -47,7 +48,7 @@ export const RepositoryListContainer = ({
       )}
       keyExtractor={item => item.id}
       onEndReached={onEndReach}
-      onEndReachedThreshold={0.5}
+      // onEndReachedThreshold={0.5}
     />
   );
 };
@@ -89,8 +90,11 @@ const RepositoryList = () => {
   };
 
   return (
-    <>
-      <SearchInput onChangeText={text => setSearch(text)} />
+    <Box>
+      <SearchInput
+        onChangeText={text => setSearch(text)}
+        placeholder="Search a repository"
+      />
       <Picker
         style={{marginHorizontal: 10}}
         selectedValue={selectedFilter}
@@ -112,7 +116,7 @@ const RepositoryList = () => {
         loading={loading}
         onEndReach={onEndReach}
       />
-    </>
+    </Box>
   );
 };
 

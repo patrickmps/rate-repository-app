@@ -1,10 +1,12 @@
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FormikTextInput from '../TextInput';
-import {ButtonTitle, Container, SubmitButton} from './styles';
+import {Container} from './styles';
 import {useNavigation} from '@react-navigation/native';
-import {useMutation} from '@apollo/client';
+import {ApolloError, useMutation} from '@apollo/client';
 import {CREATE_REVIEW} from '../../graphql/mutations';
+import Button from '../Button';
+import Toast from 'react-native-toast-message';
 
 interface InitialValuesTypes {
   ownerName: string;
@@ -31,9 +33,13 @@ const initialValues: InitialValuesTypes = {
 
 type CreateReviewProps = {
   onSubmit: (values: InitialValuesTypes) => Promise<void>;
+  loading: boolean;
 };
 
-export const CreateReviewContainer = ({onSubmit}: CreateReviewProps) => {
+export const CreateReviewContainer = ({
+  onSubmit,
+  loading,
+}: CreateReviewProps) => {
   return (
     <Formik
       initialValues={initialValues}
@@ -54,10 +60,12 @@ export const CreateReviewContainer = ({onSubmit}: CreateReviewProps) => {
             name="rating"
             placeholder="Rating between 0 and 100"
           />
-          <FormikTextInput name="Review" placeholder="Review" multiline />
-          <SubmitButton onPress={() => handleSubmit()}>
-            <ButtonTitle>Create a Review</ButtonTitle>
-          </SubmitButton>
+          <FormikTextInput name="review" placeholder="Review" multiline />
+          <Button
+            title="Create a review"
+            onPress={() => handleSubmit()}
+            loading={loading}
+          />
         </Container>
       )}
     </Formik>
@@ -83,13 +91,23 @@ const CreateReview = () => {
         },
       });
       navigation.navigate('Repositories');
-      console.log(result);
+      Toast.show({
+        type: 'success',
+        text1: 'Review created successfully!',
+      });
     } catch (e) {
+      if (e instanceof ApolloError) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error!',
+          text2: `${e.message}`,
+        });
+      }
       console.log(e);
     }
   };
 
-  return <CreateReviewContainer onSubmit={onSubmit} />;
+  return <CreateReviewContainer onSubmit={onSubmit} loading={result.loading} />;
 };
 
 export default CreateReview;

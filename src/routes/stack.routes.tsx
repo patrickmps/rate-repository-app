@@ -1,10 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTheme} from 'styled-components';
-import {Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import SignIn from '../components/SignIn';
 import RepositoryList from '../components/RepositoryList';
-import {useApolloClient, useQuery} from '@apollo/client';
+import {ApolloError, useApolloClient, useQuery} from '@apollo/client';
 import {ME} from '../graphql/queries';
 import useAuthStorage from '../hooks/useAuthStorage';
 import SingleRepository from '../components/SingleRepository';
@@ -12,6 +11,9 @@ import RootStackParamList from './@types/stack';
 import CreateReview from '../components/CreateReview';
 import SignUp from '../components/SignUp';
 import MyReviews from '../components/MyReviews';
+import MenuLink from '../components/MenuLink';
+import {Alert} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -23,8 +25,34 @@ const StackRoutes = () => {
   const apolloClient = useApolloClient();
 
   async function signOut() {
-    await authStorage.removeAccessToken();
-    await apolloClient.resetStore();
+    try {
+      await authStorage.removeAccessToken();
+      await apolloClient.resetStore();
+      Toast.show({
+        type: 'success',
+        text1: 'Sign out successfully!',
+      });
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        Toast.show({
+          type: 'error',
+          text1: 'Error!',
+          text2: `${e.message}`,
+        });
+      }
+      console.log(e);
+    }
+  }
+
+  function signOutAlert() {
+    return Alert.alert('Sign out', 'Are you sure you want to sign out?', [
+      {
+        text: 'Cancel',
+        onPress: () => null,
+        style: 'cancel',
+      },
+      {text: 'Sign out', onPress: signOut},
+    ]);
   }
 
   function signIn() {
@@ -43,14 +71,14 @@ const StackRoutes = () => {
   const headerRightButton = () => {
     return user?.me ? (
       <>
-        <Button onPress={myReviews} title="My Reviews" />
-        <Button onPress={createReview} title="Create Review" />
-        <Button onPress={signOut} title="Sign Out" />
+        <MenuLink onPress={myReviews} title="My Reviews" />
+        <MenuLink onPress={createReview} title="Create Review" />
+        <MenuLink onPress={signOutAlert} title="Sign Out" />
       </>
     ) : (
       <>
-        <Button onPress={signIn} title="Sign In" />
-        <Button onPress={signUp} title="Sign Up" />
+        <MenuLink onPress={signIn} title="Sign In" />
+        <MenuLink onPress={signUp} title="Sign Up" />
       </>
     );
   };
